@@ -1,0 +1,48 @@
+var:
+  debug: false
+  commandsonlyfromconsole: false
+save:
+  interval: 900
+  broadcast: true
+  disablestructuresaving: false
+  onplugindisable: true
+restart:
+  juststop: false
+  oncrash:
+    enabled: false
+    scriptpath: ''
+    timeout: 60
+    checkerstartdelay: 20
+    runonnonpluginstop: false
+  auto:
+    enabled: false
+    broadcast: true
+    scriptpath: ''
+    time: []
+    countdown:
+      enabled: true
+      broadcastonsecond:
+        - 60
+        - 30
+        - 10
+        - 9
+        - 8
+        - 7
+        - 6
+        - 5
+        - 4
+        - 3
+        - 2
+        - 1
+    commands: []
+consolecommand:
+  timemode:
+    enabled: false
+    times: {}
+  intervalmode:
+    enabled: false
+    intervals: {}
+networkwatcher:
+  mainthreadnetaccess:
+    warn: true
+    interrupt: false
