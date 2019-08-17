@@ -25,7 +25,9 @@ import java.util.Map;
 
 import autosaveworld.config.loader.Config;
 import autosaveworld.config.loader.ConfigOption;
+import autosaveworld.config.loader.postload.AstListAppend;
 import autosaveworld.config.loader.postload.DefaultCountdown;
+import autosaveworld.config.loader.postload.DefaultDestFolder;
 import autosaveworld.config.loader.transform.ConfSectIntHashMap;
 import autosaveworld.config.loader.transform.ConfSectStringHashMap;
 import autosaveworld.config.loader.transform.ListClone;
@@ -76,6 +78,27 @@ public class AutoSaveWorldConfig implements Config {
 	public List<Integer> autoRestartCountdownSeconds = new ArrayList<>();
 	@ConfigOption(path = "restart.auto.commands", transform = ListClone.class, legacypath = "autorestart.commands")
 	public List<String> autoRestartPreStopCommmands = new ArrayList<>();
+	// localfs backup
+	@ConfigOption(path = "backup.localfs.enabled")
+	public boolean backupLFSEnabled = true;
+	@ConfigOption(path = "backup.localfs.destinationfolders", transform = ListClone.class, postload = DefaultDestFolder.class)
+	public List<String> backupLFSExtFolders = new ArrayList<>();
+	@ConfigOption(path = "backup.localfs.worlds", transform = ListClone.class, postload = AstListAppend.class)
+	public List<String> backupLFSBackupWorldsList = new ArrayList<>();
+	@ConfigOption(path = "backup.localfs.MaxNumberOfWorldsBackups")
+	public int backupLFSMaxNumberOfWorldsBackups = 15;
+	@ConfigOption(path = "backup.localfs.pluginsfolder")
+	public boolean backupLFSPluginsFolder = false;
+	@ConfigOption(path = "backup.localfs.MaxNumberOfPluginsBackups")
+	public int backupLFSMaxNumberOfPluginsBackups = 15;
+	@ConfigOption(path = "backup.localfs.otherfolders", transform = ListClone.class)
+	public List<String> backupLFSOtherFolders = new ArrayList<>();
+	@ConfigOption(path = "backup.localfs.MaxNumberOfOtherFoldersBackups")
+	public int backupLFSMaxNumberOfOtherBackups = 15;
+	@ConfigOption(path = "backup.localfs.excludefolders", transform = ListClone.class)
+	public List<String> backupLFSExcludeFolders = new ArrayList<>();
+	@ConfigOption(path = "backup.localfs.zip")
+	public boolean backupLFSZipEnabled = false;
 	// consolecmmand
 	@ConfigOption(path = "consolecommand.timemode.enabled")
 	public boolean ccTimesModeEnabled = false;

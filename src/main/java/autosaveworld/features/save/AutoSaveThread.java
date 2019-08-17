@@ -102,35 +102,11 @@ public class AutoSaveThread extends IntervalTaskThread {
             SchedulerUtils.callSyncTaskAndWait(() -> saveWorld(world));
         }
         MessageLogger.debug("Saved Worlds");
-
-        /* Dump region cache
-        if (AutoSaveWorld.getInstance().getMainConfig().saveDumpRegionCache) {
-            MessageLogger.debug("Dumping cache");
-            for (World world : Bukkit.getWorlds()) {
-                dumpRegionCache(world);
-            }
-            MessageLogger.debug("Dumped cache");
-        }*/
-
         MessageLogger.broadcast(AutoSaveWorld.getInstance().getMessageConfig().messageSaveBroadcastPost, AutoSaveWorld.getInstance().getMainConfig().saveBroadcast);
     }
 
-    private void dumpRegionCache(World world) {
-        if (world.isAutoSave()) {
-            try {
-                Object worldserver = getNMSWorld(world);
-                // invoke saveLevel method which waits for all chunks to save and than dumps RegionFileCache
-                ReflectionUtils.getMethod(worldserver.getClass(), NMSNames.getSaveLevelMethodName(), 0).invoke(worldserver);
-            } catch (Exception e) {
-                MessageLogger.exception("Could not dump RegionFileCache", e);
-            }
-        }
-    }
-
     private void saveWorld(World world) {
-        if (!world.isAutoSave()) {
-            return;
-        }
+        if (!world.isAutoSave()) return;
 
         if (AutoSaveWorld.getInstance().getMainConfig().saveDisableStructureSaving && needSaveWorkAround()) {
             saveWorldDoNoSaveStructureInfo(world);
@@ -169,7 +145,6 @@ public class AutoSaveThread extends IntervalTaskThread {
             saveWorldNormal(world);
         }
     }
-
 
     private Object getNMSWorld(World world) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         return ReflectionUtils.getMethod(world.getClass(), "getHandle", 0).invoke(world);

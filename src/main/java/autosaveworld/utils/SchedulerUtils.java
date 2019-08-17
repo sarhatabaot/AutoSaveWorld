@@ -25,10 +25,6 @@ import org.bukkit.Bukkit;
 import autosaveworld.core.AutoSaveWorld;
 
 public class SchedulerUtils {
-
-	public static void init() {
-	}
-
 	public static void callSyncTaskAndWait(Runnable run) {
 		scheduleSyncTaskAndWaitInternal(run, 0);
 	}
