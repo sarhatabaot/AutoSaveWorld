@@ -32,6 +32,7 @@ import autosaveworld.utils.CollectionsUtils;
 import autosaveworld.utils.ReflectionUtils;
 import autosaveworld.utils.SchedulerUtils;
 import autosaveworld.utils.Threads.IntervalTaskThread;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class AutoSaveThread extends IntervalTaskThread {
 
@@ -80,12 +81,9 @@ public class AutoSaveThread extends IntervalTaskThread {
 
         MessageLogger.broadcast(AutoSaveWorld.getInstance().getMessageConfig().messageSaveBroadcastPost, AutoSaveWorld.getInstance().getMainConfig().saveBroadcast);
     }
+    
 
-    public void performSave() {
-
-        MessageLogger.broadcast(AutoSaveWorld.getInstance().getMessageConfig().messageSaveBroadcastPre, AutoSaveWorld.getInstance().getMainConfig().saveBroadcast);
-
-        // Save the players
+    private void savePlayers(){
         MessageLogger.debug("Saving players");
         for (final Collection<Player> playersPart : CollectionsUtils.split(BukkitUtils.getOnlinePlayers(), 6)) {
             SchedulerUtils.callSyncTaskAndWait(() -> {
@@ -95,13 +93,24 @@ public class AutoSaveThread extends IntervalTaskThread {
             });
         }
         MessageLogger.debug("Saved Players");
+    }
 
-        // Save the worlds
+    private void saveWorlds(){
         MessageLogger.debug("Saving worlds");
         for (final World world : Bukkit.getWorlds()) {
             SchedulerUtils.callSyncTaskAndWait(() -> saveWorld(world));
         }
         MessageLogger.debug("Saved Worlds");
+    }
+
+    public void performSave() {
+        MessageLogger.broadcast(AutoSaveWorld.getInstance().getMessageConfig().messageSaveBroadcastPre, AutoSaveWorld.getInstance().getMainConfig().saveBroadcast);
+
+        // Save the players
+        savePlayers();
+
+        // Save the worlds
+        saveWorlds();
         MessageLogger.broadcast(AutoSaveWorld.getInstance().getMessageConfig().messageSaveBroadcastPost, AutoSaveWorld.getInstance().getMainConfig().saveBroadcast);
     }
 
