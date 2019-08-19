@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.sarhatabaot</groupId>
     <artifactId>AutoSaveWorld</artifactId>
-    <version>4.15-TI</version>
+    <version>4.16-TI-BETA</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
