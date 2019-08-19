@@ -78,6 +78,17 @@ public class AutoSaveWorldConfig implements Config {
 	public List<Integer> autoRestartCountdownSeconds = new ArrayList<>();
 	@ConfigOption(path = "restart.auto.commands", transform = ListClone.class, legacypath = "autorestart.commands")
 	public List<String> autoRestartPreStopCommmands = new ArrayList<>();
+	// backup
+	@ConfigOption(path = "backup.enabled")
+	public boolean backupEnabled = false;
+	@ConfigOption(path = "backup.interval")
+	public int backupInterval = 60 * 60 * 6;
+	@ConfigOption(path = "backup.broadcast")
+	public boolean backupBroadcast = true;
+	@ConfigOption(path = "backup.savebefore")
+	public boolean backupsaveBefore = true;
+	@ConfigOption(path = "backup.rateLimit")
+	public long backupRateLimit = -1;
 	// localfs backup
 	@ConfigOption(path = "backup.localfs.enabled")
 	public boolean backupLFSEnabled = true;

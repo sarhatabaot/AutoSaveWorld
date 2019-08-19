@@ -29,6 +29,10 @@ public class AutoSaveWorldConfigMSG implements Config {
 	public String messageSaveBroadcastPre = "&9AutoSaving";
 	@ConfigOption(path = "broadcast.post")
 	public String messageSaveBroadcastPost = "&9AutoSave Complete";
+	@ConfigOption(path = "broadcastbackup.pre")
+	public String messageBackupBroadcastPre = "&9AutoBackuping";
+	@ConfigOption(path = "broadcastbackup.post")
+	public String messageBackupBroadcastPost = "&9AutoBackup Complete";
 	@ConfigOption(path = "autorestart.restarting")
 	public String messageAutoRestart = "&9Server is restarting";
 	@ConfigOption(path = "autorestart.countdown")
