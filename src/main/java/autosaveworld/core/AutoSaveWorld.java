@@ -19,6 +19,7 @@ package autosaveworld.core;
 
 import java.io.File;
 
+import autosaveworld.features.backup.AutoBackupThread;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -56,6 +57,7 @@ public class AutoSaveWorld extends JavaPlugin {
 	private final AutoSaveThread saveThread;
 	private final AutoRestartThread autoRestartThread;
 	private final CrashRestartThread crashrestartThread;
+	private final AutoBackupThread backupThread;
 	private final AutoConsoleCommandThread consolecommandThread;
 	private final NetworkWatcher watcher;
 
@@ -78,6 +80,7 @@ public class AutoSaveWorld extends JavaPlugin {
 		mainConfig = new AutoSaveWorldConfig();
 		messageConfig = new AutoSaveWorldConfigMSG();
 		saveThread = new AutoSaveThread();
+		backupThread = new AutoBackupThread();
 		autoRestartThread = new AutoRestartThread();
 		crashrestartThread = new CrashRestartThread(Thread.currentThread());
 		consolecommandThread = new AutoConsoleCommandThread();
@@ -105,6 +108,7 @@ public class AutoSaveWorld extends JavaPlugin {
 		}
 		saveThread.start();
 		autoRestartThread.start();
+		backupThread.start();
 		crashrestartThread.start();
 		consolecommandThread.start();
 		watcher.register();
@@ -114,7 +118,6 @@ public class AutoSaveWorld extends JavaPlugin {
 
 	private static void preloadClasses() {
 		//preload core classes, so replacing jar file won't break plugin completely (Some core functions should work)
-		SchedulerUtils.init();
 		ReflectionUtils.init();
 		FileUtils.init();
 		StringUtils.init();
@@ -137,6 +140,7 @@ public class AutoSaveWorld extends JavaPlugin {
 		stopThread(autoRestartThread);
 		stopThread(crashrestartThread);
 		stopThread(consolecommandThread);
+		stopThread(backupThread);
 		watcher.unregister();
 	}
 
