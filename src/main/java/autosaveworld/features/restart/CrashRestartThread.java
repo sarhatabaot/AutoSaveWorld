@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import autosaveworld.utils.threads.SIntervalTaskThread;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
@@ -38,7 +39,6 @@ import autosaveworld.commands.subcommands.StopCommand;
 import autosaveworld.core.AutoSaveWorld;
 import autosaveworld.core.logging.MessageLogger;
 import autosaveworld.utils.SchedulerUtils;
-import autosaveworld.utils.Threads.SIntervalTaskThread;
 
 public class CrashRestartThread extends SIntervalTaskThread {
 

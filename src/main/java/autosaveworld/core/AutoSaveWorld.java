@@ -20,6 +20,7 @@ package autosaveworld.core;
 import java.io.File;
 
 import autosaveworld.features.backup.AutoBackupThread;
+import autosaveworld.utils.threads.SIntervalTaskThread;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,9 +43,7 @@ import autosaveworld.features.restart.RestartWaiter;
 import autosaveworld.features.save.AutoSaveThread;
 import autosaveworld.utils.FileUtils;
 import autosaveworld.utils.ReflectionUtils;
-import autosaveworld.utils.SchedulerUtils;
 import autosaveworld.utils.StringUtils;
-import autosaveworld.utils.Threads.SIntervalTaskThread;
 
 @Getter
 public class AutoSaveWorld extends JavaPlugin {

@@ -23,7 +23,7 @@ import autosaveworld.config.AutoSaveWorldConfig;
 import autosaveworld.core.AutoSaveWorld;
 import autosaveworld.core.logging.MessageLogger;
 import autosaveworld.features.backup.localfs.LocalFSBackup;
-import autosaveworld.utils.Threads.IntervalTaskThread;
+import autosaveworld.utils.threads.IntervalTaskThread;
 
 public class AutoBackupThread extends IntervalTaskThread {
 

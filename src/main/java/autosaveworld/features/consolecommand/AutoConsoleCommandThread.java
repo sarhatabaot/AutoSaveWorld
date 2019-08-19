@@ -25,7 +25,7 @@ import autosaveworld.core.AutoSaveWorld;
 import autosaveworld.core.logging.MessageLogger;
 import autosaveworld.utils.BukkitUtils;
 import autosaveworld.utils.SchedulerUtils;
-import autosaveworld.utils.Threads.SIntervalTaskThread;
+import autosaveworld.utils.threads.SIntervalTaskThread;
 
 public class AutoConsoleCommandThread extends SIntervalTaskThread {
 
