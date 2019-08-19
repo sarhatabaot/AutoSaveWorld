@@ -28,6 +28,12 @@ import autosaveworld.utils.SchedulerUtils;
 import autosaveworld.utils.threads.SIntervalTaskThread;
 
 public class AutoConsoleCommandThread extends SIntervalTaskThread {
+	// timesmode checks
+	private int minute = -1;
+	private final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+	private final SimpleDateFormat msdf = new SimpleDateFormat("mm");
+	// intervalmode checks
+	private long intervalcounter = 0;
 
 	public AutoConsoleCommandThread() {
 		super("AutoConsoleCommandThread");
@@ -67,11 +73,6 @@ public class AutoConsoleCommandThread extends SIntervalTaskThread {
 		}
 	}
 
-	// timesmode checks
-	private int minute = -1;
-	private final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-	private final SimpleDateFormat msdf = new SimpleDateFormat("mm");
-
 	private List<String> getTimesToExecute() {
 		List<String> timestoexecute = new ArrayList<>();
 		int cminute = Integer.parseInt(msdf.format(System.currentTimeMillis()));
@@ -82,9 +83,6 @@ public class AutoConsoleCommandThread extends SIntervalTaskThread {
 		}
 		return timestoexecute;
 	}
-
-	// intervalmode checks
-	private long intervalcounter = 0;
 
 	private List<Integer> getIntervalsToExecute() {
 		List<Integer> inttoexecute = new ArrayList<>();

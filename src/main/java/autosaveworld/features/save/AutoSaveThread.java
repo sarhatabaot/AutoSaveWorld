@@ -20,6 +20,8 @@ package autosaveworld.features.save;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
+import autosaveworld.utils.SchedulerUtils;
+import autosaveworld.utils.threads.IntervalTaskThread;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -30,8 +32,6 @@ import autosaveworld.core.logging.MessageLogger;
 import autosaveworld.utils.BukkitUtils;
 import autosaveworld.utils.CollectionsUtils;
 import autosaveworld.utils.ReflectionUtils;
-import autosaveworld.utils.SchedulerUtils;
-import autosaveworld.utils.Threads.IntervalTaskThread;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class AutoSaveThread extends IntervalTaskThread {
@@ -81,7 +81,7 @@ public class AutoSaveThread extends IntervalTaskThread {
 
         MessageLogger.broadcast(AutoSaveWorld.getInstance().getMessageConfig().messageSaveBroadcastPost, AutoSaveWorld.getInstance().getMainConfig().saveBroadcast);
     }
-    
+
 
     private void savePlayers(){
         MessageLogger.debug("Saving players");
@@ -91,6 +91,7 @@ public class AutoSaveThread extends IntervalTaskThread {
                     player.saveData();
                 }
             });
+            //new SavePlayersWaitRunnable(playersPart).runTask(AutoSaveWorld.getInstance());
         }
         MessageLogger.debug("Saved Players");
     }
@@ -99,6 +100,7 @@ public class AutoSaveThread extends IntervalTaskThread {
         MessageLogger.debug("Saving worlds");
         for (final World world : Bukkit.getWorlds()) {
             SchedulerUtils.callSyncTaskAndWait(() -> saveWorld(world));
+            //new SaveWorldsWaitRunnable(world).runTask(AutoSaveWorld.getInstance());
         }
         MessageLogger.debug("Saved Worlds");
     }
@@ -157,6 +159,34 @@ public class AutoSaveThread extends IntervalTaskThread {
 
     private Object getNMSWorld(World world) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         return ReflectionUtils.getMethod(world.getClass(), "getHandle", 0).invoke(world);
+    }
+
+    private class SavePlayersWaitRunnable extends BukkitRunnable {
+        private final Collection<Player> playersPart;
+
+        public SavePlayersWaitRunnable(final Collection<Player> playersPart) {
+            this.playersPart = playersPart;
+        }
+
+        @Override
+        public void run() {
+            for (Player player : playersPart) {
+                player.saveData();
+            }
+        }
+    }
+
+    private class SaveWorldsWaitRunnable extends BukkitRunnable {
+        private World world;
+
+        public SaveWorldsWaitRunnable(final World world) {
+            this.world = world;
+        }
+
+        @Override
+        public void run() {
+            saveWorld(world);
+        }
     }
 
 }
