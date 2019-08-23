@@ -13,3 +13,7 @@ commands:
     description: AutoSaveWorld /asw save command
     aliases: save
     usage: Use /save to run AutoSave
+  autobackup:
+    description: AutoSaveWorld /asw backup command
+    aliases: backup
+    usage: Use /backup to run AutoBackup

@@ -101,17 +101,6 @@ public class CrashRestartThread extends SIntervalTaskThread {
 		while (bukkitMainThread.isAlive()) {
 			bukkitMainThread.stop();
 		}
-		// disable spigot async catcher
-		/*TODO
-		try {
-			AsyncCatcher.enabled = false;
-		} catch (Throwable t) {
-		}
-		// disable paper timings so async access doesn't print unneeded exceptions
-		try {
-			MinecraftTimings.stopServer();
-		} catch (Throwable t) {
-		}*/
 		log.log(Level.SEVERE, "Disabling plugins");
 		// unload plugins
 		Plugin[] plugins = Bukkit.getPluginManager().getPlugins();

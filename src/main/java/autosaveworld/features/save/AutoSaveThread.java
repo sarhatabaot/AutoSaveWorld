@@ -85,12 +85,8 @@ public class AutoSaveThread extends IntervalTaskThread {
 
     private void savePlayers(){
         MessageLogger.debug("Saving players");
-        for (final Collection<Player> playersPart : CollectionsUtils.split(BukkitUtils.getOnlinePlayers(), 6)) {
-            SchedulerUtils.callSyncTaskAndWait(() -> {
-                for (Player player : playersPart) {
-                    player.saveData();
-                }
-            });
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            SchedulerUtils.callSyncTaskAndWait(player::saveData);
             //new SavePlayersWaitRunnable(playersPart).runTask(AutoSaveWorld.getInstance());
         }
         MessageLogger.debug("Saved Players");

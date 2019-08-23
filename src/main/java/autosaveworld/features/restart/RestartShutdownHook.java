@@ -31,9 +31,9 @@ import autosaveworld.features.restart.RestartScript.PlatformNotSupportedExceptio
 
 public class RestartShutdownHook extends Thread {
 
-	private final File restartscript;
-	public RestartShutdownHook(File restartscript) {
-		this.restartscript = restartscript;
+	private final File restartScript;
+	public RestartShutdownHook(File restartScript) {
+		this.restartScript = restartScript;
 	}
 
 	public void restart() {
@@ -52,11 +52,11 @@ public class RestartShutdownHook extends Thread {
 	private List<String> getRestartCommand() throws IOException {
 		try {
 			return Collections.singletonList(RestartScript.createScript(
-				restartScriptExists() ? Collections.singletonList(restartscript.getAbsolutePath()) : getJavaLaunchCommand()
+				restartScriptExists() ? Collections.singletonList(restartScript.getAbsolutePath()) : getJavaLaunchCommand()
 			).getAbsolutePath());
 		} catch (IOException | PlatformNotSupportedException e) {
 			if (restartScriptExists()) {
-				return Collections.singletonList(restartscript.getAbsolutePath());
+				return Collections.singletonList(restartScript.getAbsolutePath());
 			} else {
 				throw new RuntimeException("Unable to create temporal restart script and server start script doesn't exist", e);
 			}
@@ -76,7 +76,7 @@ public class RestartShutdownHook extends Thread {
 	}
 
 	private boolean restartScriptExists() {
-		return restartscript != null && restartscript.exists() && restartscript.isFile();
+		return restartScript != null && restartScript.exists() && restartScript.isFile();
 	}
 
 	@Override
