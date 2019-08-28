@@ -14,7 +14,6 @@ import autosaveworld.core.AutoSaveWorld;
 
 public class BukkitUtils {
 
-	@SuppressWarnings("unchecked")
 	@Deprecated
 	/**
 	 * @deprecated Use Bukkit.getOnlinePlayers()

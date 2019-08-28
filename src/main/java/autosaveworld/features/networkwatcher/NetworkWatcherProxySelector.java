@@ -35,64 +35,62 @@ import autosaveworld.utils.ReflectionUtils;
 
 public class NetworkWatcherProxySelector extends ProxySelector {
 
-	private final ProxySelector defaultSelector;
+    private final ProxySelector defaultSelector;
 
-	public ProxySelector getDefaultSelector() {
-		return defaultSelector;
-	}
+    public ProxySelector getDefaultSelector() {
+        return defaultSelector;
+    }
 
-	public NetworkWatcherProxySelector(ProxySelector defaultSelector) {
-		this.defaultSelector = defaultSelector;
-	}
+    public NetworkWatcherProxySelector(ProxySelector defaultSelector) {
+        this.defaultSelector = defaultSelector;
+    }
 
-	@Override
-	public List<Proxy> select(URI uri) {
-		AutoSaveWorldConfig config = AutoSaveWorld.getInstance().getMainConfig();
-		if (config.networkWatcherWarnMainThreadAcc) {
-			if (Bukkit.isPrimaryThread()) {
-				if (config.networkWatcherInterruptMainThreadNetAcc) {
-					ReflectionUtils.throwException(new IOException("Network access from main thread is not allowed"));
-				} else {
-					Plugin plugin = getRequestingPlugin();
-					if (plugin != null) {
-						MessageLogger.warn("Plugin " + plugin.getName() + " attempted to establish connection " + uri + " in main server thread");
-					} else {
-						MessageLogger.warn("Something attempted to access " + uri + " in main server thread, printing stack trace");
-						Thread.dumpStack();
-					}
-				}
-			}
-		}
-		return defaultSelector.select(uri);
-	}
+    @Override
+    public List<Proxy> select(URI uri) {
+        AutoSaveWorldConfig config = AutoSaveWorld.getInstance().getMainConfig();
+        if (config.networkWatcherWarnMainThreadAcc && Bukkit.isPrimaryThread()) {
+            if (config.networkWatcherInterruptMainThreadNetAcc) {
+                ReflectionUtils.throwException(new IOException("Network access from main thread is not allowed"));
+            } else {
+                Plugin plugin = getRequestingPlugin();
+                if (plugin != null) {
+                    MessageLogger.warn("Plugin " + plugin.getName() + " attempted to establish connection " + uri + " in main server thread");
+                } else {
+                    MessageLogger.warn("Something attempted to access " + uri + " in main server thread, printing stack trace");
+                    Thread.dumpStack();
+                }
+            }
+        }
+        return defaultSelector.select(uri);
+    }
 
-	@Override
-	public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
-		defaultSelector.connectFailed(uri, sa, ioe);
-	}
+    @Override
+    public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
+        defaultSelector.connectFailed(uri, sa, ioe);
+    }
 
-	private Plugin getRequestingPlugin() {
-		HashMap<ClassLoader, Plugin> map = getClassloaderToPluginMap();
-		StackTraceElement[] stacktrace = new Exception().getStackTrace();
-		for (StackTraceElement element : stacktrace) {
-			try {
-				ClassLoader loader = Class.forName(element.getClassName(), false, getClass().getClassLoader()).getClassLoader();
-				if (map.containsKey(loader)) {
-					return map.get(loader);
-				}
-			} catch (ClassNotFoundException e) {
-			}
-		}
-		return null;
-	}
+    private Plugin getRequestingPlugin() {
+        HashMap<ClassLoader, Plugin> map = getClassloaderToPluginMap();
+        StackTraceElement[] stacktrace = new Exception().getStackTrace();
+        for (StackTraceElement element : stacktrace) {
+            try {
+                ClassLoader loader = Class.forName(element.getClassName(), false, getClass().getClassLoader()).getClassLoader();
+                if (map.containsKey(loader)) {
+                    return map.get(loader);
+                }
+            } catch (ClassNotFoundException e) {
+            }
+        }
+        return null;
+    }
 
-	private HashMap<ClassLoader, Plugin> getClassloaderToPluginMap() {
-		HashMap<ClassLoader, Plugin> map = new HashMap<>();
-		for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
-			map.put(plugin.getClass().getClassLoader(), plugin);
-		}
-		map.remove(getClass().getClassLoader());
-		return map;
-	}
+    private HashMap<ClassLoader, Plugin> getClassloaderToPluginMap() {
+        HashMap<ClassLoader, Plugin> map = new HashMap<>();
+        for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
+            map.put(plugin.getClass().getClassLoader(), plugin);
+        }
+        map.remove(getClass().getClassLoader());
+        return map;
+    }
 
 }

@@ -29,13 +29,14 @@ import autosaveworld.utils.SchedulerUtils;
 import autosaveworld.utils.threads.SIntervalTaskThread;
 
 public class AutoRestartThread extends SIntervalTaskThread {
+	private volatile boolean command = false;
+	private volatile boolean skipcountdown = false;
+
+	private final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
 	public AutoRestartThread() {
 		super("AutoRestartThread");
 	}
-
-	private volatile boolean command = false;
-	private volatile boolean skipcountdown = false;
 
 	public void triggerRestart(boolean skipcountdown) {
 		this.command = true;
@@ -93,8 +94,7 @@ public class AutoRestartThread extends SIntervalTaskThread {
 
 		StopCommand.stop();
 	}
-
-	private final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+	
 	private String getCurTime() {
 		return sdf.format(System.currentTimeMillis());
 	}

@@ -23,6 +23,7 @@ import autosaveworld.core.logging.MessageLogger;
 import autosaveworld.utils.StringUtils;
 
 public class ProcessManager {
+	private ProcessStorage storage = new ProcessStorage();
 
 	public void handleProcessManagerCommand(CommandSender sender, String command, String processname, String[] args) {
 		if (command.equalsIgnoreCase("start")) {
@@ -39,8 +40,6 @@ public class ProcessManager {
 			MessageLogger.sendMessage(sender, "Invalid process manager command");
 		}
 	}
-
-	private ProcessStorage storage = new ProcessStorage();
 
 	private void runProcess(CommandSender sender, String prname, String[] args) {
 		if (prname == null) {

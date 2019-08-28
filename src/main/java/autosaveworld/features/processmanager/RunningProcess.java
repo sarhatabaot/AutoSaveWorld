@@ -32,12 +32,12 @@ public class RunningProcess {
 
 	private String[] args;
 
+	protected Process p;
+	protected Queue<String> output = new LinkedList<>();
+
 	public RunningProcess(String[] args) {
 		this.args = args.clone();
 	}
-
-	protected Process p;
-	protected Queue<String> output = new LinkedList<>();
 
 	public void start(CommandSender sender) {
 		sender.sendMessage("Starting process");

@@ -35,13 +35,15 @@ import org.bukkit.event.player.PlayerLoginEvent;
 
 import autosaveworld.core.AutoSaveWorld;
 import autosaveworld.utils.BukkitUtils;
+import org.jetbrains.annotations.NotNull;
 
 public class MessageLogger {
 
 	private static final FormattingCodesParser formattingCodesParser = new FormattingCodesParser();
+	private static final PrintStream outstream = new PrintStream(new FileOutputStream(FileDescriptor.err), true);
 
 	public static void sendMessage(CommandSender sender, String message) {
-		if (!message.equals("")) {
+		if (!"".equals(message)) {
 			sender.sendMessage(formattingCodesParser.parseFormattingCodes(message));
 		}
 	}
@@ -50,14 +52,16 @@ public class MessageLogger {
 		sender.sendMessage(formattingCodesParser.parseFormattingCodes(message));
 		t.printStackTrace(new PrintWriter(new Writer() {
 			@Override
-			public void write(char[] cbuf, int off, int len) throws IOException {
+			public void write(@NotNull char[] cbuf, int off, int len) throws IOException {
 				sender.sendMessage(new String(cbuf, off, len));
 			}
 			@Override
 			public void flush() throws IOException {
+				//only using write
 			}
 			@Override
 			public void close() throws IOException {
+				//only using write
 			}
 		}));
 	}
@@ -97,8 +101,6 @@ public class MessageLogger {
 	public static void warn(String message) {
 		AutoSaveWorld.getInstance().getLogger().warning(ChatColor.stripColor(message));
 	}
-
-	private static final PrintStream outstream = new PrintStream(new FileOutputStream(FileDescriptor.err), true);
 
 	public static void printOutException(Throwable t) {
 		t.printStackTrace(outstream);

@@ -25,13 +25,13 @@ public class RateLimitedInputStream extends InputStream {
     private InputStream inputstream;
     private long bytesperms;
 
+    private long startTime = 0;
+    private long bytesRead = 0;
+
     public RateLimitedInputStream(InputStream inputstream, long kbps) {
         this.inputstream = inputstream;
         bytesperms = (kbps * 1024) / 1000;
     }
-
-    private long startTime = 0;
-    private long bytesRead = 0;
 
     private void sleepIfNeeded(long bytesToRead) {
         if (startTime == 0) {

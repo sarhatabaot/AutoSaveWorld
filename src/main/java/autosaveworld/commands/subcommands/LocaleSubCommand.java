@@ -30,6 +30,7 @@ import autosaveworld.core.logging.MessageLogger;
 public class LocaleSubCommand implements ISubCommand {
 
     private LocaleChanger localeChanger;
+    private List<String> cmds = Arrays.asList("available", "load");
 
     public LocaleSubCommand(LocaleChanger localeChanger) {
         this.localeChanger = localeChanger;
@@ -57,7 +58,6 @@ public class LocaleSubCommand implements ISubCommand {
         }
     }
 
-    private List<String> cmds = Arrays.asList("available", "load");
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
