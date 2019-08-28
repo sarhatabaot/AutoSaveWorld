@@ -6,6 +6,24 @@ save:
   broadcast: true
   disablestructuresaving: false
   onplugindisable: true
+backup:
+  enabled: false
+  interval: 21600
+  broadcast: true
+  savebefore: true
+  rateLimit: -1
+  localfs:
+    enabled: true
+    destinationfolders: []
+    worlds:
+      - world
+    MaxNumberOfWorldsBackups: 2
+    pluginsfolder: true
+    MaxNumberOfPluginsBackups: 2
+    otherfolders: []
+    MaxNumberOfOtherFoldersBackups: 2
+    excludefolders: []
+    zip: true
 restart:
   juststop: false
   oncrash:
