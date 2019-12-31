@@ -22,6 +22,7 @@ import java.util.Collection;
 
 import autosaveworld.utils.SchedulerUtils;
 import autosaveworld.utils.threads.IntervalTaskThread;
+import com.google.inject.Inject;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -36,6 +37,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class AutoSaveThread extends IntervalTaskThread {
 
+    @Inject
+    private AutoSaveWorld plugin;
+
     public AutoSaveThread() {
         super("AutoSaveThread");
     }
@@ -48,7 +52,7 @@ public class AutoSaveThread extends IntervalTaskThread {
             Object minecraftserver = ReflectionUtils.getField(server.getClass(), "console").get(server);
             ReflectionUtils.getField(minecraftserver.getClass(), "autosavePeriod").set(minecraftserver, 0);
         } catch (Exception e) {
-            AutoSaveWorld.getInstance().getLogger().warning(e.getMessage());
+            plugin.getLogger().warning(e.getMessage());
         }
     }
 
@@ -59,7 +63,7 @@ public class AutoSaveThread extends IntervalTaskThread {
 
     @Override
     public int getInterval() {
-        return AutoSaveWorld.getInstance().getMainConfig().saveInterval;
+        return plugin.getMainConfig().saveInterval;
     }
 
     @Override
@@ -68,7 +72,7 @@ public class AutoSaveThread extends IntervalTaskThread {
     }
 
     public void performSaveNow() {
-        MessageLogger.broadcast(AutoSaveWorld.getInstance().getMessageConfig().messageSaveBroadcastPre, AutoSaveWorld.getInstance().getMainConfig().saveBroadcast);
+        MessageLogger.broadcast(plugin.getMessageConfig().messageSaveBroadcastPre, plugin.getMainConfig().saveBroadcast);
 
         MessageLogger.debug("Saving players");
         Bukkit.savePlayers();
@@ -79,7 +83,7 @@ public class AutoSaveThread extends IntervalTaskThread {
         }
         MessageLogger.debug("Saved Worlds");
 
-        MessageLogger.broadcast(AutoSaveWorld.getInstance().getMessageConfig().messageSaveBroadcastPost, AutoSaveWorld.getInstance().getMainConfig().saveBroadcast);
+        MessageLogger.broadcast(plugin.getMessageConfig().messageSaveBroadcastPost, plugin.getMainConfig().saveBroadcast);
     }
 
 

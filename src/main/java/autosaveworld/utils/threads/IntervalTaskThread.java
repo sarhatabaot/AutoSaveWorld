@@ -2,9 +2,6 @@ package autosaveworld.utils.threads;
 
 import autosaveworld.core.logging.MessageLogger;
 
-/**
- * @author sarhatabaot
- */
 public abstract class IntervalTaskThread extends SIntervalTaskThread {
 
     public IntervalTaskThread(String threadname) {

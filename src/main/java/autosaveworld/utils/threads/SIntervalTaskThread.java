@@ -7,6 +7,7 @@ import autosaveworld.utils.ReflectionUtils;
 /**
  * @author sarhatabaot
  */
+//TODO bug why.. just use Bukkits classes :(
 public abstract class SIntervalTaskThread extends Thread {
 
     public SIntervalTaskThread(String threadname) {

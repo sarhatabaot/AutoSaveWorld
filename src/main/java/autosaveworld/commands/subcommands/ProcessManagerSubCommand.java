@@ -26,6 +26,7 @@ import org.bukkit.command.CommandSender;
 import autosaveworld.commands.ISubCommand;
 import autosaveworld.features.processmanager.ProcessManager;
 
+// We don't use this...
 public class ProcessManagerSubCommand implements ISubCommand {
 
 	private final ProcessManager processmanager = new ProcessManager();

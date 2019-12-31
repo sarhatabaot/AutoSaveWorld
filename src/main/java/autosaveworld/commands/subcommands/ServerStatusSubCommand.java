@@ -18,6 +18,7 @@
 package autosaveworld.commands.subcommands;
 
 import java.io.File;
+import java.lang.management.OperatingSystemMXBean;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
@@ -34,8 +35,8 @@ public class ServerStatusSubCommand implements ISubCommand {
 		DecimalFormat df = new DecimalFormat("0.00");
 		// processor (if available)
 		try {
-			com.sun.management.OperatingSystemMXBean systemBean = (com.sun.management.OperatingSystemMXBean) java.lang.management.ManagementFactory.getOperatingSystemMXBean();
-			double cpuusage = systemBean.getProcessCpuLoad() * 100;
+			OperatingSystemMXBean systemBean = java.lang.management.ManagementFactory.getOperatingSystemMXBean();
+			double cpuusage = systemBean.getSystemLoadAverage() * 100;
 			if (cpuusage > 0) {
 				sender.sendMessage(ChatColor.GOLD + "Cpu usage: " + ChatColor.RED + df.format(cpuusage) + "%");
 			} else {

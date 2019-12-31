@@ -69,7 +69,7 @@ public class MessageLogger {
 	public static void broadcast(String message, boolean broadcast) {
 		if (!message.equals("") && broadcast) {
 			message = formattingCodesParser.parseFormattingCodes(message);
-			for (Player player : BukkitUtils.getOnlinePlayers()) {
+			for (Player player : Bukkit.getOnlinePlayers()) {
 				player.sendMessage(message);
 			}
 			Bukkit.getConsoleSender().sendMessage(message);

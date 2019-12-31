@@ -94,7 +94,7 @@ public class AutoRestartThread extends SIntervalTaskThread {
 
 		StopCommand.stop();
 	}
-	
+
 	private String getCurTime() {
 		return sdf.format(System.currentTimeMillis());
 	}

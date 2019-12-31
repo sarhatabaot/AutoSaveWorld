@@ -25,7 +25,7 @@ import org.bukkit.command.CommandSender;
 import autosaveworld.commands.ISubCommand;
 import autosaveworld.features.pluginmanager.PluginManager;
 import autosaveworld.utils.StringUtils;
-
+//TODO: We don't use this...
 public class PluginManagerSubCommand implements ISubCommand {
 
 	private final PluginManager pluginmanager = new PluginManager();

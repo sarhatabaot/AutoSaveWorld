@@ -2,6 +2,8 @@ name: AutoSaveWorld
 main: autosaveworld.core.AutoSaveWorld
 version: ${project.version}
 author: _Shevchik_
+authors:
+  - sarhatabaot
 load: STARTUP
 api-version: "1.13"
 commands:

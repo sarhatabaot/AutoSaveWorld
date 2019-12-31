@@ -19,8 +19,11 @@ package autosaveworld.core;
 
 import java.io.File;
 
+import autosaveworld.commands.AutoSaveWorldCommand;
 import autosaveworld.features.backup.AutoBackupThread;
 import autosaveworld.utils.threads.SIntervalTaskThread;
+import co.aikar.commands.BukkitCommandManager;
+import com.google.inject.Injector;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,6 +51,7 @@ import autosaveworld.utils.StringUtils;
 @Getter
 public class AutoSaveWorld extends JavaPlugin {
 	@Setter (AccessLevel.PRIVATE)
+	@Deprecated
 	private static AutoSaveWorld instance;
 
 	private final AutoSaveWorldConfig mainConfig;
@@ -68,6 +72,10 @@ public class AutoSaveWorld extends JavaPlugin {
 	}
 
 	public AutoSaveWorld() {
+		SimpleBinderModule module = new SimpleBinderModule(this);
+		Injector injector = module.createInjector();
+		injector.injectMembers(this);
+
 		if (!Bukkit.isPrimaryThread()) {
 			throw new IllegalStateException("Init not fom main thread");
 		}
@@ -88,23 +96,14 @@ public class AutoSaveWorld extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		BukkitCommandManager manager = new BukkitCommandManager(this);
+		manager.enableUnstableAPI("help");
+		manager.registerCommand(new AutoSaveWorldCommand(this));
+
 		ConfigLoader.loadAndSave(mainConfig);
 		ConfigLoader.loadAndSave(messageConfig);
 		preloadClasses();
 
-		try {
-			CommandsHandler commandshandler = new CommandsHandler();
-			commandshandler.initSubCommandHandlers();
-			for (String commandName : getDescription().getCommands().keySet()) {
-				getCommand(commandName).setExecutor(commandshandler);
-			}
-		} catch (Throwable t) {
-			NoTabCompleteCommandsHandler commandshandler = new NoTabCompleteCommandsHandler();
-			commandshandler.initSubCommandHandlers();
-			for (String commandName : getDescription().getCommands().keySet()) {
-				getCommand(commandName).setExecutor(commandshandler);
-			}
-		}
 		saveThread.start();
 		autoRestartThread.start();
 		backupThread.start();
