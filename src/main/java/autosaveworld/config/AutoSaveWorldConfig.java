@@ -40,17 +40,6 @@ public class AutoSaveWorldConfig implements Config {
 	public boolean varDebug = false;
 	@ConfigOption(path = "var.commandsonlyfromconsole")
 	public boolean commandOnlyFromConsole = false;
-	// save
-	@ConfigOption(path = "save.interval")
-	public int saveInterval = 900;
-	@ConfigOption(path = "save.broadcast")
-	public boolean saveBroadcast = true;
-	@ConfigOption(path = "save.disablestructuresaving")
-	public boolean saveDisableStructureSaving = false;
-	/*@ConfigOption(path = "save.forceregioncachedump")
-	public boolean saveDumpRegionCache = true;*/
-	@ConfigOption(path = "save.onplugindisable")
-	public boolean saveOnASWDisable = true;
 	// restart
 	@ConfigOption(path = "restart.juststop")
 	public boolean restartJustStop = false;

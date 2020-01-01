@@ -6,7 +6,6 @@ import autosaveworld.utils.BukkitUtils;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
-import com.google.inject.Inject;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,7 +23,6 @@ import java.util.List;
 @CommandAlias("asw|autosaveworld")
 @Description("Main autosaveworld command.")
 public class AutoSaveWorldCommand extends BaseCommand {
-	@Inject
 	private AutoSaveWorld plugin;
 
 	public AutoSaveWorldCommand(final AutoSaveWorld plugin) {
@@ -85,13 +83,6 @@ public class AutoSaveWorldCommand extends BaseCommand {
 		plugin.getAutoRestartThread().triggerRestart(false);
 	}
 
-	@CommandAlias("save")
-	@CommandPermission("asw.save")
-	@Description("Runs a save.")
-	public void onSave(){
-		plugin.getSaveThread().triggerTaskRun();
-	}
-
 	@CommandAlias("reloadall")
 	@CommandPermission("asw.reload.all")
 	@Description("Reloads all configurations.")
@@ -127,9 +118,10 @@ public class AutoSaveWorldCommand extends BaseCommand {
 	@CommandAlias("forcerestart")
 	@CommandPermission("asw.forcerestart")
 	@Description("Force restart the server.")
-	public void onForceRestart(){
+	public void onForceRestart(final CommandSender sender){
+		sender.sendMessage("This command is currently unsupported.");
 		//should check for script.bat and create it if it doesn't exist.
-		plugin.getAutoRestartThread().triggerRestart(true);
+		//plugin.getAutoRestartThread().triggerRestart(true);
 	}
 
 	@CommandAlias("backup")

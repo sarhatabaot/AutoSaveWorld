@@ -23,16 +23,12 @@ import autosaveworld.commands.AutoSaveWorldCommand;
 import autosaveworld.features.backup.AutoBackupThread;
 import autosaveworld.utils.threads.SIntervalTaskThread;
 import co.aikar.commands.BukkitCommandManager;
-import com.google.inject.Injector;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import autosaveworld.commands.CommandsHandler;
-import autosaveworld.commands.NoTabCompleteCommandsHandler;
-import autosaveworld.commands.subcommands.StopCommand;
 import autosaveworld.config.AutoSaveWorldConfig;
 import autosaveworld.config.AutoSaveWorldConfigMSG;
 import autosaveworld.config.loader.ConfigLoader;
@@ -43,7 +39,6 @@ import autosaveworld.features.restart.AutoRestartThread;
 import autosaveworld.features.restart.CrashRestartThread;
 import autosaveworld.features.restart.RestartShutdownHook;
 import autosaveworld.features.restart.RestartWaiter;
-import autosaveworld.features.save.AutoSaveThread;
 import autosaveworld.utils.FileUtils;
 import autosaveworld.utils.ReflectionUtils;
 import autosaveworld.utils.StringUtils;
@@ -57,7 +52,9 @@ public class AutoSaveWorld extends JavaPlugin {
 	private final AutoSaveWorldConfig mainConfig;
 	private final AutoSaveWorldConfigMSG messageConfig;
 
-	private final AutoSaveThread saveThread;
+	@Getter
+	private AutoSaveWorldCommand autoSaveWorldCommand;
+
 	private final AutoRestartThread autoRestartThread;
 	private final CrashRestartThread crashrestartThread;
 	private final AutoBackupThread backupThread;
@@ -72,10 +69,6 @@ public class AutoSaveWorld extends JavaPlugin {
 	}
 
 	public AutoSaveWorld() {
-		SimpleBinderModule module = new SimpleBinderModule(this);
-		Injector injector = module.createInjector();
-		injector.injectMembers(this);
-
 		if (!Bukkit.isPrimaryThread()) {
 			throw new IllegalStateException("Init not fom main thread");
 		}
@@ -86,7 +79,6 @@ public class AutoSaveWorld extends JavaPlugin {
 		//important to create instance here
 		mainConfig = new AutoSaveWorldConfig();
 		messageConfig = new AutoSaveWorldConfigMSG();
-		saveThread = new AutoSaveThread();
 		backupThread = new AutoBackupThread();
 		autoRestartThread = new AutoRestartThread();
 		crashrestartThread = new CrashRestartThread(Thread.currentThread());
@@ -98,13 +90,13 @@ public class AutoSaveWorld extends JavaPlugin {
 	public void onEnable() {
 		BukkitCommandManager manager = new BukkitCommandManager(this);
 		manager.enableUnstableAPI("help");
-		manager.registerCommand(new AutoSaveWorldCommand(this));
+		this.autoSaveWorldCommand = new AutoSaveWorldCommand(this);
+		manager.registerCommand(autoSaveWorldCommand);
 
 		ConfigLoader.loadAndSave(mainConfig);
 		ConfigLoader.loadAndSave(messageConfig);
 		preloadClasses();
 
-		saveThread.start();
 		autoRestartThread.start();
 		backupThread.start();
 		crashrestartThread.start();
@@ -124,17 +116,12 @@ public class AutoSaveWorld extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		if (mainConfig.restartOnCrashOnNonAswStop && !StopCommand.isStoppedByAsw()) {
+		if (mainConfig.restartOnCrashOnNonAswStop && !AutoSaveWorldCommand.isStoppedByAsw()) {
 			MessageLogger.debug("Restarting due to server stopped not by asw command");
 			Runtime.getRuntime().addShutdownHook(new RestartShutdownHook(new File(mainConfig.restartOnCrashScriptPath)));
 		}
-		if (mainConfig.saveOnASWDisable) {
-			MessageLogger.debug("Saving");
-			saveThread.performSaveNow();
-		}
 		ConfigLoader.save(mainConfig);
 		ConfigLoader.save(messageConfig);
-		stopThread(saveThread);
 		stopThread(autoRestartThread);
 		stopThread(crashrestartThread);
 		stopThread(consolecommandThread);

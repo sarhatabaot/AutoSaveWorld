@@ -35,7 +35,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 
-import autosaveworld.commands.subcommands.StopCommand;
 import autosaveworld.core.AutoSaveWorld;
 import autosaveworld.core.logging.MessageLogger;
 import autosaveworld.utils.SchedulerUtils;
@@ -93,7 +92,7 @@ public class CrashRestartThread extends SIntervalTaskThread {
 		}
 
 		// make sure that we don't trigger restart twice
-		StopCommand.stop();
+		AutoSaveWorld.getInstance().getAutoSaveWorldCommand().onStop();
 		// freeze main thread
 		bukkitMainThread.suspend();
 		// kill main thread, so it will exit all monitors

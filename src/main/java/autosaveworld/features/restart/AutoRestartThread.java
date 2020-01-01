@@ -20,7 +20,6 @@ package autosaveworld.features.restart;
 import java.io.File;
 import java.text.SimpleDateFormat;
 
-import autosaveworld.commands.subcommands.StopCommand;
 import autosaveworld.config.AutoSaveWorldConfig;
 import autosaveworld.core.AutoSaveWorld;
 import autosaveworld.core.logging.MessageLogger;
@@ -92,7 +91,7 @@ public class AutoRestartThread extends SIntervalTaskThread {
 			}
 		}, 10);
 
-		StopCommand.stop();
+		AutoSaveWorld.getInstance().getAutoSaveWorldCommand().onStop();
 	}
 
 	private String getCurTime() {
