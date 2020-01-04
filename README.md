@@ -6,7 +6,6 @@ This version is made for the TreasureIsland minecraft servers. Therefore it does
 but rather only what we use:
 * Backup
 * Networkwatcher
-* Save
 * Restart
 
 If you want the full version for 1.14, try the [1.14.2-hotfix branch](https://github.com/sarhatabaot/AutoSaveWorld/tree/1.14.2-hotfix).

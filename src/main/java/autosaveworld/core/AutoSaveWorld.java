@@ -61,6 +61,8 @@ public class AutoSaveWorld extends JavaPlugin {
 	private final AutoConsoleCommandThread consolecommandThread;
 	private final NetworkWatcher watcher;
 
+
+
 	public static AutoSaveWorld getInstance() {
 		if (instance == null) {
 			throw new IllegalStateException("Instance access before init");
