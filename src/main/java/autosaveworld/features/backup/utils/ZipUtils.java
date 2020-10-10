@@ -76,6 +76,7 @@ public class ZipUtils {
             return;
         }
         InputStream inStream = null;
+        //TODO Use try with catch resources. Also use a zip lib.
         try {
             //first attempt to construct the input stream, may throw exception if file gone missing or some other thing happened
             inStream = InputStreamFactory.getFileInputStream(srcFile);
