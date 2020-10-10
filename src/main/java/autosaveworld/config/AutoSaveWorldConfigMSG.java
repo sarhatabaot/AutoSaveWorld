@@ -25,20 +25,10 @@ import autosaveworld.core.GlobalConstants;
 
 public class AutoSaveWorldConfigMSG implements Config {
 
-	@ConfigOption(path = "broadcast.pre")
-	public String messageSaveBroadcastPre = "&9AutoSaving";
-	@ConfigOption(path = "broadcast.post")
-	public String messageSaveBroadcastPost = "&9AutoSave Complete";
 	@ConfigOption(path = "broadcastbackup.pre")
-	public String messageBackupBroadcastPre = "&9AutoBackuping";
+	public String messageBackupBroadcastPre = "&9Started backup.";
 	@ConfigOption(path = "broadcastbackup.post")
-	public String messageBackupBroadcastPost = "&9AutoBackup Complete";
-	@ConfigOption(path = "autorestart.restarting")
-	public String messageAutoRestart = "&9Server is restarting";
-	@ConfigOption(path = "autorestart.countdown")
-	public String messageAutoRestartCountdown = "&9Server will restart in {SECONDS} seconds";
-	@ConfigOption(path = "insufficentpermissions")
-	public String messageInsufficientPermissions = "&cYou do not have access to that command.";
+	public String messageBackupBroadcastPost = "&9Backup Complete";
 
 	@Override
 	public File getFile() {
