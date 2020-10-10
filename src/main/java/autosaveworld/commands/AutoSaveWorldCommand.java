@@ -2,6 +2,7 @@ package autosaveworld.commands;
 
 import autosaveworld.config.loader.ConfigLoader;
 import autosaveworld.core.AutoSaveWorld;
+import autosaveworld.core.logging.MessageLogger;
 import autosaveworld.utils.BukkitUtils;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
@@ -11,19 +12,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.text.DecimalFormat;
 import java.util.List;
 
-/**
- * @author sarhatabaot
- */
 @CommandAlias("asw|autosaveworld")
 @Description("Main autosaveworld command.")
 public class AutoSaveWorldCommand extends BaseCommand {
-	private AutoSaveWorld plugin;
+	private final AutoSaveWorld plugin;
 
 	public AutoSaveWorldCommand(final AutoSaveWorld plugin) {
 		this.plugin = plugin;
@@ -32,14 +34,14 @@ public class AutoSaveWorldCommand extends BaseCommand {
 	@Getter
 	private static volatile boolean stoppedByAsw;
 
-	@CommandAlias("version")
+	@Subcommand("version")
 	@CommandPermission("asw.version")
 	@Description("Shows the plugin's version.")
 	public void onVersion(CommandSender sender){
 		BukkitUtils.tell(sender, plugin.getDescription().getName() + " " + plugin.getDescription().getVersion());
 	}
 
-	@CommandAlias("stop")
+	@Subcommand("stop")
 	@CommandPermission("asw.stop")
 	@Description("Stops the server.")
 	public void onStop(){
@@ -47,7 +49,47 @@ public class AutoSaveWorldCommand extends BaseCommand {
 		Bukkit.shutdown();
 	}
 
-	@CommandAlias("status")
+	@Subcommand("process")
+	@CommandPermission("asw.process")
+	public void onShowProcesses(final CommandSender sender){
+		String os = System.getProperty("os.name").toLowerCase();
+		try {
+			String line;
+			Process process;
+			if(os.contains("win"))
+				process = Runtime.getRuntime().exec(System.getenv("windir")+"\\system32\\"+"tasklist.exe");
+			else
+				process = Runtime.getRuntime().exec("ps -e");
+			BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			while ((line = input.readLine()) != null){
+				plugin.getLogger().info(line);
+			}
+			input.close();
+			MessageLogger.sendMessage(sender, "Check log for output.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@Subcommand("lsof")
+	@CommandPermission("asw.lsof")
+	public void onLsof(final CommandSender sender){
+		try {
+			String line;
+			ProcessBuilder builder = new ProcessBuilder("sh","-c","lsof");
+
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(builder.start().getInputStream()))) {
+				while((line = reader.readLine()) != null){
+					plugin.getLogger().info(line);
+				}
+			}
+
+			MessageLogger.sendMessage(sender, "Check log for output.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Subcommand("status")
 	@CommandPermission("asw.status")
 	@Description("Shows the server status.")
 	public void onServerStatus(CommandSender sender){
@@ -76,14 +118,7 @@ public class AutoSaveWorldCommand extends BaseCommand {
 		sender.sendMessage(ChatColor.GOLD + "Disk usage: " + ChatColor.RED + df.format(((maxspacegb - freespacegb) * 100) / maxspacegb) + "% " + ChatColor.DARK_AQUA + "(" + ChatColor.DARK_GREEN + (maxspacegb - freespacegb) + "/" + maxspacegb + " GB" + ChatColor.DARK_AQUA + ")" + ChatColor.RESET);
 	}
 
-	@CommandAlias("restart")
-	@CommandPermission("asw.restart")
-	@Description("Restarts the server.")
-	public void onRestart(){
-		plugin.getAutoRestartThread().triggerRestart(false);
-	}
-
-	@CommandAlias("reloadall")
+	@Subcommand("reloadall")
 	@CommandPermission("asw.reload.all")
 	@Description("Reloads all configurations.")
 	public void onReloadAll(CommandSender sender){
@@ -92,14 +127,14 @@ public class AutoSaveWorldCommand extends BaseCommand {
 		BukkitUtils.tell(sender, "All configurations reloaded.");
 	}
 
-	@CommandAlias("reload")
+	@Subcommand("reload")
 	@CommandPermission("asw.reload")
 	@Description("Reloads the main config file.")
 	public void onReloadConfig(CommandSender sender){
 		ConfigLoader.loadAndSave(plugin.getMainConfig());
 		BukkitUtils.tell(sender, "Main configuration reloaded");
 	}
-	@CommandAlias("reloadmsg")
+	@Subcommand("reloadmsg")
 	@CommandPermission("asw.reload.msg")
 	@Description("Reloads the messages config file.")
 	public void onReloadConfigMsg(CommandSender sender){
@@ -108,30 +143,19 @@ public class AutoSaveWorldCommand extends BaseCommand {
 	}
 
 	@HelpCommand
-	@CommandAlias("help")
 	@Description("Shows the help menu.")
 	public void onHelp(CommandHelp help){
 		help.showHelp();
 	}
 
-	//TODO: Doesn't work.
-	@CommandAlias("forcerestart")
-	@CommandPermission("asw.forcerestart")
-	@Description("Force restart the server.")
-	public void onForceRestart(final CommandSender sender){
-		sender.sendMessage("This command is currently unsupported.");
-		//should check for script.bat and create it if it doesn't exist.
-		//plugin.getAutoRestartThread().triggerRestart(true);
-	}
-
-	@CommandAlias("backup")
+	@Subcommand("backup")
 	@CommandPermission("asw.backup")
 	@Description("Backs up the worlds and the plugins folder.")
 	public void onBackup(){
 		plugin.getBackupThread().triggerTaskRun();
 	}
 
-	@CommandAlias("forcegc")
+	@Subcommand("forcegc")
 	@CommandPermission("asw.forcegc")
 	@Description("Force the GC to run.")
 	public void onForceGc(CommandSender sender) {
@@ -140,7 +164,7 @@ public class AutoSaveWorldCommand extends BaseCommand {
 		BukkitUtils.tell(sender, "&6Type &9/asw forcegc confirm &6to run the command.");
 	}
 
-	@CommandAlias("forcegc confirm")
+	@Subcommand("forcegc confirm")
 	@CommandPermission("asw.forcegc")
 	public void onConfirm(CommandSender sender){
 		List<String> arguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
