@@ -23,6 +23,7 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class FileUtils {
 				return FileVisitResult.CONTINUE;
 			}
 		});
-		file.delete();
+		Files.delete(Paths.get(file.getPath()));
 	}
 
 	public static File[] safeListFiles(File file) {

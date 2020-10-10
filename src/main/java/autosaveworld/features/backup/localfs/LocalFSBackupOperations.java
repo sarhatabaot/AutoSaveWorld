@@ -18,8 +18,12 @@ package autosaveworld.features.backup.localfs;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.model.ExcludeFileFilter;
+import net.lingala.zip4j.model.ZipParameters;
 import org.bukkit.World;
 
 import autosaveworld.core.GlobalConstants;
@@ -32,12 +36,16 @@ public class LocalFSBackupOperations {
 
     private boolean zip;
     private String extpath;
+    private List<File> excludeFileFolders;
+    private List<File> excludeFiles;
     private List<String> excludefolders;
 
-    public LocalFSBackupOperations(boolean zip, String extpath, List<String> excludefolders) {
+    public LocalFSBackupOperations(boolean zip, String extpath, List<String> excludefolders, List<String> excludeFiles) {
         this.zip = zip;
         this.extpath = extpath;
         this.excludefolders = excludefolders;
+        this.excludeFileFolders = convertFiles(excludefolders);
+        this.excludeFiles = convertFiles(excludeFiles);
     }
 
     public void backupWorld(World world, int maxBackupsCount, String latestbackuptimestamp) {
@@ -80,16 +88,33 @@ public class LocalFSBackupOperations {
         if ((maxBackupsCount != 0) && new File(destfolder).exists() && (folders.length >= maxBackupsCount)) {
             String oldestBackupName = BackupUtils.findOldestBackupName(folders);
             if (oldestBackupName != null) {
-                File oldestBakup = new File(destfolder, oldestBackupName);
-                FileUtils.deleteDirectory(oldestBakup);
+                File oldestBackup = new File(destfolder, oldestBackupName);
+                FileUtils.deleteDirectory(oldestBackup);
             }
         }
+
         String bfolder = destfolder + File.separator + latestbackuptimestamp;
         if (!zip) {
             LocalFSUtils.copyDirectory(fromfolder, new File(bfolder), excludefolders);
         } else {
-            ZipUtils.zipFolder(fromfolder, new File(bfolder + ".zip"), excludefolders);
+            new File(bfolder+".zip").getParentFile().mkdirs();
+            ExcludeFileFilter excludeFileFilter = file -> excludeFileFolders.contains(file) || excludeFiles.contains(file);
+            ZipParameters zipParameters = new ZipParameters();
+            zipParameters.setExcludeFileFilter(excludeFileFilter);
+            ZipFile zipFile = new ZipFile(bfolder+".zip");
+
+            zipFile.addFolder(fromfolder, zipParameters);
+            //ZipUtils.zipFolder(fromfolder, new File(bfolder + ".zip"), excludefolders);
         }
+    }
+
+
+    private List<File> convertFiles(List<String> exclude){
+        List<File> list = new ArrayList<>();
+        for(String string: exclude){
+            list.add(new File(string));
+        }
+        return list;
     }
 
 }

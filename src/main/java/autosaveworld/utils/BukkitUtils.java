@@ -16,26 +16,6 @@ import autosaveworld.core.AutoSaveWorld;
 
 public class BukkitUtils {
 
-	@Deprecated
-	/**
-	 * @deprecated Use Bukkit.getOnlinePlayers()
-	 */
-	public static Collection<Player> getOnlinePlayers() {
-		try {
-			Method method = ReflectionUtils.getMethod(Bukkit.class, "getOnlinePlayers", 0);
-			if (method.getReturnType() == Collection.class) {
-				return (Collection<Player>) method.invoke(null);
-			} else if (method.getReturnType().isArray()) {
-				return Arrays.asList((Player[]) method.invoke(null));
-			} else {
-				throw new RuntimeException("Return type "+method.getReturnType()+" is not supported");
-			}
-		} catch (Throwable t) {
-			ReflectionUtils.throwException(t);
-			return null;
-		}
-	}
-
 	public static void dispatchCommandAsConsole(String command) {
 		ServerCommandEvent event = new ServerCommandEvent(Bukkit.getConsoleSender(), command);
 		Bukkit.getPluginManager().callEvent(event);
