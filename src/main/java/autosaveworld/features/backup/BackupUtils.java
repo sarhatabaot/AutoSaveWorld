@@ -73,4 +73,14 @@ public class BackupUtils {
         return false;
     }
 
+
+    public static boolean isFileExcluded(List<String> excludeList, String path){
+        String filePath = FileUtils.getAbsoluteFileName(path);
+        for(String type: excludeList){
+            if(filePath.contains(type))
+                return true;
+        }
+        return false;
+    }
+
 }

@@ -126,6 +126,7 @@ public class AutoSaveWorldCommand extends BaseCommand {
 		BukkitUtils.tell(sender, "All configurations reloaded.");
 	}
 
+
 	@Subcommand("reload")
 	@CommandPermission("asw.reload")
 	@Description("Reloads the main config file.")
@@ -150,7 +151,7 @@ public class AutoSaveWorldCommand extends BaseCommand {
 	@Subcommand("backup")
 	@CommandPermission("asw.backup")
 	@Description("Backs up the worlds and the plugins folder.")
-	public void onBackup(){
+	public void onBackup(final CommandSender sender){
 		plugin.getBackupThread().triggerTaskRun();
 	}
 

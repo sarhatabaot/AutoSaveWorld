@@ -75,16 +75,8 @@ public class ZipUtils {
             MessageLogger.warn("Failed to backup file: "+srcFile.getAbsolutePath() + ", reason: canRead() returned false");
             return;
         }
-        InputStream inStream = null;
-        //TODO Use try with catch resources. Also use a zip lib.
-        try {
+        try (InputStream inStream = InputStreamFactory.getFileInputStream(srcFile)){
             //first attempt to construct the input stream, may throw exception if file gone missing or some other thing happened
-            inStream = InputStreamFactory.getFileInputStream(srcFile);
-        } catch (IOException e) {
-            MessageLogger.warn("Failed to backup file: "+srcFile.getAbsolutePath() + ", reason: exception when opening reading channel: "+e.getMessage());
-            return;
-        }
-        if (inStream != null) {
             int firstByte = -1;
             //check if we can read from input stream
             try {
@@ -114,12 +106,10 @@ public class ZipUtils {
             }
 
             zipOutStream.closeEntry();
-
-            try {
-                inStream.close();
-            } catch (IOException e) {
-            }
+        } catch (IOException e) {
+            MessageLogger.warn("Failed to backup file: "+srcFile.getAbsolutePath() + ", reason: exception when opening reading channel: "+e.getMessage());
         }
+
     }
 
 }

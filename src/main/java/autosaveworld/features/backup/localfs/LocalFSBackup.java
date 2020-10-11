@@ -17,6 +17,7 @@
 package autosaveworld.features.backup.localfs;
 
 import java.text.SimpleDateFormat;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -39,20 +40,20 @@ public class LocalFSBackup extends Backup {
             String backuptimestamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(System.currentTimeMillis());
             for (World world : Bukkit.getWorlds()) {
                 if ((config.backupLFSBackupWorldsList).contains("*") || config.backupLFSBackupWorldsList.contains(world.getName())) {
-                    MessageLogger.debug("Backuping Worlds");
+                    MessageLogger.debug("Started backup of Worlds");
                     bo.backupWorld(world, config.backupLFSMaxNumberOfWorldsBackups, backuptimestamp);
-                    MessageLogger.debug("Backuped Worlds");
+                    MessageLogger.debug("Finished backup of Worlds");
                 }
             }
             if (config.backupLFSPluginsFolder) {
-                MessageLogger.debug("Backuping plugins");
+                MessageLogger.debug("Started backup of plugins");
                 bo.backupPlugins(config.backupLFSMaxNumberOfPluginsBackups, backuptimestamp);
-                MessageLogger.debug("Backuped plugins");
+                MessageLogger.debug("Finished backup of plugins");
             }
             if (!config.backupLFSOtherFolders.isEmpty()) {
-                MessageLogger.debug("Backuping other folders");
+                MessageLogger.debug("Started backup of other folders");
                 bo.backupOtherFolders(config.backupLFSOtherFolders, config.backupLFSMaxNumberOfOtherBackups, backuptimestamp);
-                MessageLogger.debug("Backuped other folders");
+                MessageLogger.debug("Finished backup of other folders");
             }
         }
     }

@@ -20,10 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.model.ExcludeFileFilter;
-import net.lingala.zip4j.model.ZipParameters;
 import org.bukkit.World;
 
 import autosaveworld.core.GlobalConstants;
@@ -36,20 +35,20 @@ public class LocalFSBackupOperations {
 
     private boolean zip;
     private String extpath;
-    private List<File> excludeFileFolders;
-    private List<File> excludeFiles;
     private List<String> excludefolders;
+    private List<File> excludeFileFolders;
+    private List<String> exclude;
 
-    public LocalFSBackupOperations(boolean zip, String extpath, List<String> excludefolders, List<String> excludeFiles) {
+    public LocalFSBackupOperations(boolean zip, String extpath, List<String> excludefolders, List<String> exclude) {
         this.zip = zip;
         this.extpath = extpath;
         this.excludefolders = excludefolders;
-        this.excludeFileFolders = convertFiles(excludefolders);
-        this.excludeFiles = convertFiles(excludeFiles);
+        this.excludeFileFolders = convertStringToFiles(excludefolders);
+        this.exclude = exclude;
     }
 
     public void backupWorld(World world, int maxBackupsCount, String latestbackuptimestamp) {
-        MessageLogger.debug("Backuping world " + world.getWorldFolder().getName());
+        MessageLogger.debug("Started backup on world= " + world.getWorldFolder().getName());
         try {
             File fromfolder = world.getWorldFolder().getAbsoluteFile();
             String destfolder = extpath + File.separator + "backups" + File.separator + "worlds" + File.separator + world.getWorldFolder().getName();
@@ -57,7 +56,7 @@ public class LocalFSBackupOperations {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        MessageLogger.debug("Backuped world " + world.getWorldFolder().getName());
+        MessageLogger.debug("Finished backup on world= " + world.getWorldFolder().getName());
     }
 
     public void backupPlugins(int maxBackupsCount, String latestbackuptimestamp) {
@@ -97,24 +96,26 @@ public class LocalFSBackupOperations {
         if (!zip) {
             LocalFSUtils.copyDirectory(fromfolder, new File(bfolder), excludefolders);
         } else {
-            new File(bfolder+".zip").getParentFile().mkdirs();
-            ExcludeFileFilter excludeFileFilter = file -> excludeFileFolders.contains(file) || excludeFiles.contains(file);
-            ZipParameters zipParameters = new ZipParameters();
-            zipParameters.setExcludeFileFilter(excludeFileFilter);
-            ZipFile zipFile = new ZipFile(bfolder+".zip");
-
-            zipFile.addFolder(fromfolder, zipParameters);
+            ZipFile zipFile = new ZipFile(bfolder + ".zip");
+            for(File file: fromfolder.listFiles()){
+                if(BackupUtils.isFolderExcluded(excludefolders, file.getAbsolutePath()) || BackupUtils.isFileExcluded(exclude, file.getAbsolutePath()))
+                    continue;
+                if(file.isDirectory())
+                    zipFile.addFolder(file);
+                else
+                    zipFile.addFile(file);
+            }
             //ZipUtils.zipFolder(fromfolder, new File(bfolder + ".zip"), excludefolders);
         }
     }
 
-
-    private List<File> convertFiles(List<String> exclude){
-        List<File> list = new ArrayList<>();
-        for(String string: exclude){
-            list.add(new File(string));
+    public List<File> convertStringToFiles(List<String> list){
+        List<File> fileList = new ArrayList<>();
+        for(String string: list){
+            fileList.add(new File(string));
         }
-        return list;
+        return fileList;
     }
+
 
 }
