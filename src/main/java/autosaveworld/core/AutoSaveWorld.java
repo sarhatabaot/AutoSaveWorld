@@ -27,12 +27,12 @@ import co.aikar.commands.PaperCommandManager;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import net.sarhatabaot.configloader.ConfigLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import autosaveworld.config.AutoSaveWorldConfig;
 import autosaveworld.config.AutoSaveWorldConfigMSG;
-import autosaveworld.config.loader.ConfigLoader;
 import autosaveworld.core.logging.MessageLogger;
 import autosaveworld.features.consolecommand.AutoConsoleCommandThread;
 import autosaveworld.utils.FileUtils;

@@ -1,6 +1,5 @@
 package autosaveworld.commands;
 
-import autosaveworld.config.loader.ConfigLoader;
 import autosaveworld.core.AutoSaveWorld;
 import autosaveworld.core.logging.MessageLogger;
 import autosaveworld.utils.BukkitUtils;
@@ -8,6 +7,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
 import lombok.Getter;
+import net.sarhatabaot.configloader.ConfigLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

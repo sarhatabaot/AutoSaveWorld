@@ -27,11 +27,12 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import autosaveworld.config.loader.ConfigLoader;
+
 import autosaveworld.config.localefiles.LocaleFiles;
 import autosaveworld.core.AutoSaveWorld;
 import autosaveworld.core.GlobalConstants;
 import autosaveworld.core.logging.MessageLogger;
+import net.sarhatabaot.configloader.ConfigLoader;
 
 public class LocaleChanger {
 

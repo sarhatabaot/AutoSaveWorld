@@ -23,15 +23,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import autosaveworld.config.loader.Config;
-import autosaveworld.config.loader.ConfigOption;
-import autosaveworld.config.loader.postload.AstListAppend;
-import autosaveworld.config.loader.postload.DefaultCountdown;
-import autosaveworld.config.loader.postload.DefaultDestFolder;
-import autosaveworld.config.loader.transform.ConfSectIntHashMap;
-import autosaveworld.config.loader.transform.ConfSectStringHashMap;
-import autosaveworld.config.loader.transform.ListClone;
+
 import autosaveworld.core.GlobalConstants;
+import net.sarhatabaot.configloader.Config;
+import net.sarhatabaot.configloader.ConfigOption;
+import net.sarhatabaot.configloader.postload.AstListAppend;
+import net.sarhatabaot.configloader.postload.DefaultDestFolder;
+import net.sarhatabaot.configloader.transform.ConfSectIntHashMap;
+import net.sarhatabaot.configloader.transform.ConfSectStringHashMap;
+import net.sarhatabaot.configloader.transform.ListClone;
 
 public class AutoSaveWorldConfig implements Config {
 
@@ -50,9 +50,9 @@ public class AutoSaveWorldConfig implements Config {
 	// localfs backup
 	@ConfigOption(path = "backup.localfs.enabled")
 	public boolean backupLFSEnabled = true;
-	@ConfigOption(path = "backup.localfs.destinationfolders", transform = ListClone.class, postload = DefaultDestFolder.class)
+	@ConfigOption(path = "backup.localfs.destinationfolders", transform = ListClone.class, postLoad = DefaultDestFolder.class)
 	public List<String> backupLFSExtFolders = new ArrayList<>();
-	@ConfigOption(path = "backup.localfs.worlds", transform = ListClone.class, postload = AstListAppend.class)
+	@ConfigOption(path = "backup.localfs.worlds", transform = ListClone.class, postLoad = AstListAppend.class)
 	public List<String> backupLFSBackupWorldsList = new ArrayList<>();
 	@ConfigOption(path = "backup.localfs.MaxNumberOfWorldsBackups")
 	public int backupLFSMaxNumberOfWorldsBackups = 15;

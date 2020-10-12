@@ -19,9 +19,10 @@ package autosaveworld.config;
 
 import java.io.File;
 
-import autosaveworld.config.loader.Config;
-import autosaveworld.config.loader.ConfigOption;
+
 import autosaveworld.core.GlobalConstants;
+import net.sarhatabaot.configloader.Config;
+import net.sarhatabaot.configloader.ConfigOption;
 
 public class AutoSaveWorldConfigMSG implements Config {
 
