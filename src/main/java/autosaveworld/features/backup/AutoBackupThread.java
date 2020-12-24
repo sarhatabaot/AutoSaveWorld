@@ -76,16 +76,18 @@ public class AutoBackupThread extends IntervalTaskThread {
 
         for (Backup backup : backups) {
             MessageLogger.debug(MessageFormat.format("Starting {0} backup", backup.getName()));
+            MessageLogger.broadcastDetails(MessageFormat.format("Starting {0} backup", backup.getName()));
             try {
                 backup.performBackup();
                 MessageLogger.debug(MessageFormat.format("Finished {0} backup", backup.getName()));
-            } catch (Throwable t) {
-                MessageLogger.exception(MessageFormat.format("Failed {0} backup", backup.getName()), t);
+                MessageLogger.broadcastDetails(MessageFormat.format("Finished {0} backup", backup.getName()));
+            } catch (Exception e){
+                MessageLogger.exception(MessageFormat.format("Failed {0} backup", backup.getName()), e);
             }
         }
 
         MessageLogger.debug(MessageFormat.format("Backup took {0} milliseconds", System.currentTimeMillis() - timestart));
-
+        MessageLogger.broadcastDetails(MessageFormat.format("Backup took {0} milliseconds", System.currentTimeMillis() - timestart));
         MessageLogger.broadcast(AutoSaveWorld.getInstance().getMessageConfig().messageBackupBroadcastPost, config.backupBroadcast);
 
     }

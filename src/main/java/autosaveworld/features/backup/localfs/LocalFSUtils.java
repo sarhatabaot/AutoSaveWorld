@@ -31,7 +31,7 @@ import autosaveworld.utils.FileUtils;
 
 public class LocalFSUtils {
 
-    public static void copyDirectory(File sourceLocation, File targetLocation, List<String> excludefolders) {
+    public static void copyDirectory(File sourceLocation, File targetLocation, List<String> excludefolders) throws IOException {
         if (sourceLocation.isDirectory()) {
             targetLocation.mkdirs();
             for (String filename : FileUtils.safeList(sourceLocation)) {
@@ -45,14 +45,14 @@ public class LocalFSUtils {
                     Files.copy(sourceLocation.toPath(), targetLocation.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException e) {
                     MessageLogger.warn("Failed to backup file: " + sourceLocation);
-                    targetLocation.delete();
+                    Files.delete(targetLocation.toPath());
                 }
             } else {
                 try (InputStream is = InputStreamFactory.getFileInputStream(sourceLocation)) {
                     Files.copy(is, targetLocation.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException e) {
                     MessageLogger.warn("Failed to backup file: " + sourceLocation);
-                    targetLocation.delete();
+                    Files.delete(targetLocation.toPath());
                 }
             }
         }

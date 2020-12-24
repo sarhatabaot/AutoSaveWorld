@@ -45,6 +45,8 @@ public class AutoSaveWorldConfig implements Config {
 	public int backupInterval = 60 * 60 * 6;
 	@ConfigOption(path = "backup.broadcast")
 	public boolean backupBroadcast = true;
+	@ConfigOption(path = "backup.broadcast.details")
+	public boolean backupBroadcastDetails = true;
 	@ConfigOption(path = "backup.rateLimit")
 	public long backupRateLimit = -1;
 	// localfs backup
@@ -68,8 +70,11 @@ public class AutoSaveWorldConfig implements Config {
 	public List<String> backupLFSExcludeFolders = new ArrayList<>();
 	@ConfigOption(path = "backup.localfs.excludefiles", transform = ListClone.class)
 	public List<String> backupLFSExcludeFiles = new ArrayList<>();
+	@ConfigOption(path = "backup.localfs.excludetypes")
+	public List<String> backupLFSExcludeTypes = new ArrayList<>();
 	@ConfigOption(path = "backup.localfs.zip")
 	public boolean backupLFSZipEnabled = false;
+
 	// consolecmmand
 	@ConfigOption(path = "consolecommand.timemode.enabled")
 	public boolean ccTimesModeEnabled = false;

@@ -70,9 +70,17 @@ public class MessageLogger {
 		if (!message.equals("") && broadcast) {
 			message = formattingCodesParser.parseFormattingCodes(message);
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				player.sendMessage(message);
+				if(player.hasPermission("asw.backup.broadcast"))
+					player.sendMessage(message);
 			}
 			Bukkit.getConsoleSender().sendMessage(message);
+		}
+	}
+
+	public static void broadcastDetails(String message){
+		if(AutoSaveWorld.getInstance().getMainConfig().backupBroadcastDetails){
+			message = formattingCodesParser.parseFormattingCodes(message);
+			broadcast(message, AutoSaveWorld.getInstance().getMainConfig().backupBroadcastDetails);
 		}
 	}
 

@@ -17,7 +17,6 @@
 package autosaveworld.features.backup.localfs;
 
 import java.text.SimpleDateFormat;
-import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -36,7 +35,7 @@ public class LocalFSBackup extends Backup {
     public void performBackup() {
         AutoSaveWorldConfig config = AutoSaveWorld.getInstance().getMainConfig();
         for (String extpath : config.backupLFSExtFolders) {
-            LocalFSBackupOperations bo = new LocalFSBackupOperations(config.backupLFSZipEnabled, extpath, config.backupLFSExcludeFolders, config.backupLFSExcludeFiles);
+            LocalFSBackupOperations bo = new LocalFSBackupOperations(config.backupLFSZipEnabled, extpath, config.backupLFSExcludeFolders, config.backupLFSExcludeFiles,config.backupLFSExcludeTypes);
             String backuptimestamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(System.currentTimeMillis());
             for (World world : Bukkit.getWorlds()) {
                 if ((config.backupLFSBackupWorldsList).contains("*") || config.backupLFSBackupWorldsList.contains(world.getName())) {

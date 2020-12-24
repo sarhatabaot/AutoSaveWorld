@@ -38,13 +38,15 @@ public class LocalFSBackupOperations {
     private List<String> excludefolders;
     private List<File> excludeFileFolders;
     private List<String> exclude;
+    private List<String> excludeTypes;
 
-    public LocalFSBackupOperations(boolean zip, String extpath, List<String> excludefolders, List<String> exclude) {
+    public LocalFSBackupOperations(boolean zip, String extpath, List<String> excludefolders, List<String> exclude, List<String> excludeTypes) {
         this.zip = zip;
         this.extpath = extpath;
         this.excludefolders = excludefolders;
         this.excludeFileFolders = convertStringToFiles(excludefolders);
         this.exclude = exclude;
+        this.excludeTypes = excludeTypes;
     }
 
     public void backupWorld(World world, int maxBackupsCount, String latestbackuptimestamp) {
@@ -98,7 +100,7 @@ public class LocalFSBackupOperations {
         } else {
             ZipFile zipFile = new ZipFile(bfolder + ".zip");
             for(File file: fromfolder.listFiles()){
-                if(BackupUtils.isFolderExcluded(excludefolders, file.getAbsolutePath()) || BackupUtils.isFileExcluded(exclude, file.getAbsolutePath()))
+                if(BackupUtils.isFolderExcluded(excludefolders, file.getAbsolutePath()) || BackupUtils.isFileExcluded(exclude, file.getAbsolutePath()) || BackupUtils.isFileExcluded(excludeTypes,file.getAbsolutePath()))
                     continue;
                 if(file.isDirectory())
                     zipFile.addFolder(file);
